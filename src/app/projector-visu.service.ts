@@ -7,6 +7,7 @@ import { Observable } from 'rxjs';
   providedIn: 'root'
 })
 export class ProjectorVisuService {
+  //appelle securisé a l api
   private apiUrl = 'http://localhost:3000/api';
   private apiKey = environment.apiKey;
 
@@ -20,14 +21,15 @@ export class ProjectorVisuService {
     return this.http.get<any[]>(`${this.apiUrl}/cinemas`);
   }
 
-  getProjectorsByCinema(cinemaId: string): Observable<any[]> {
+  getProjectorsByCinemaId(cinemaId: string): Observable<any[]> {
     const headers = new HttpHeaders({
       'Content-Type': 'application/json',
       'X-API-Key': this.apiKey
     });
-    return this.http.get<any[]>(`${this.apiUrl}/projectors/${cinemaId}`, { headers });
+    return this.http.get<any[]>(`${this.apiUrl}/${cinemaId}/projectors`, { headers });
   }
-
+  
+  
   getProjectorStatus(): Observable<any[]> {
     const headers = new HttpHeaders({
       'Content-Type': 'application/json',

@@ -6,25 +6,46 @@ import { ProjectorVisuService } from '../projector-visu.service';
   styleUrls: ['./projector-status-list.component.css']
 })
 export class ProjectorStatusListComponent implements OnInit {
-  selectedCinema: string = '';
   cinemas: any[] = [];
+  selectedCinema: string = '';
   projectors: any[] = [];
-  constructor(private projectorVisuService: ProjectorVisuService) { }
+
+  statusSymbols = {
+    active: '✔️',
+    idle: '💤',
+    watching: '👀',
+    error: '❌'
+  };
   
+  constructor(private projectorService: ProjectorVisuService) { }
+
   ngOnInit(): void {
-    this.projectorVisuService.getCinemas().subscribe(data => {
+    this.loadCinemas();
+  }
+
+  loadCinemas(): void {
+    this.projectorService.getCinemas().subscribe(data => {
       this.cinemas = data;
-    });
-    
-    this.projectorVisuService.getProjectorStatus().subscribe(projectors => {
-      this.projectors = projectors;
     });
   }
 
-  onCinemaChange(): void {
-    this.projectorVisuService.getProjectorsByCinema(this.selectedCinema).subscribe(data => {
-      console.log(data); 
-      this.projectors = data;
-    });
+  loadProjectorsByCinema(cinemaId: string): void {
+    this.projectorService.getProjectorsByCinemaId(cinemaId).subscribe(
+      (projectors) => {
+        this.projectors = projectors;
+      },
+      (error) => {
+        console.error('Error loading projectors:', error);
+      }
+    );
+  }
+  
+
+  onCinemaSelect(): void {
+    if (this.selectedCinema) {
+      this.loadProjectorsByCinema(this.selectedCinema);
+    } else {
+      this.projectors = [];
+    }
   }
 }
