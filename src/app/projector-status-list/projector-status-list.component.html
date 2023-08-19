@@ -1,16 +1,25 @@
-<div>
-  <h2>Visualisation des projecteurs</h2>
-  <label for="cinemaSelect">Sélectionnez un cinéma:</label>
-  <select id="cinemaSelect" [(ngModel)]="selectedCinema" (change)="onCinemaSelect()">
-    <option value="">Sélectionnez un cinéma</option>
-    <option *ngFor="let cinema of cinemas" [value]="cinema.cinema_id">{{ cinema.cinema_id }}</option>
-  </select>
-  <div *ngIf="selectedCinema">
+<div >
+  <div class="cinema-selector">
+    <h2>Visualisation des projecteurs</h2>
+    <label for="cinemaSelect">Sélectionnez un cinéma:</label>
+    <select id="cinemaSelect" [(ngModel)]="selectedCinema" (change)="onCinemaSelect()">
+      <option value="">Sélectionnez un cinéma</option>
+      <option *ngFor="let cinema of cinemas" [value]="cinema.cinema_id">{{ cinema.cinema_id }}</option>
+    </select>
+  </div>
+
+  <div class="grid-container" *ngIf="selectedCinema">
     <h3>Projecteurs pour {{ selectedCinema }}</h3>
-    <ul>
-      <li *ngFor="let projector of projectors">
-        Projecteur ID: {{ projector.projector_id }} | Statut: {{ projector.status }}
-      </li>
-    </ul>
+    <div class="projector-grid">
+      <div *ngFor="let projector of projectors" class="projector-card" (click)="onProjectorClick(projector)">
+        <div class="projector-details">
+          <div class="projector-wrapper">
+            <img [src]="getStatusImage(projector.status)">
+            <p>Projecteur ID: {{ projector.projector_id }}</p>
+            <p>Statut: {{ projector.status }} - {{ statusSymbols[projector.status] }}</p>
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
 </div>

@@ -1,0 +1,70 @@
+/* Style général pour la section contenant la grille de projecteurs */
+div {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin: 20px; /* Espacement autour de la section principale */
+}
+
+/* Style pour la sélection de cinéma */
+.cinema-selector {
+  margin-bottom: 20px; /* Espacement en bas de la sélection de cinéma */
+}
+
+/* Style pour l'en-tête des projecteurs */
+h3 {
+  font-size: 20px;
+  margin-bottom: 10px; /* Espacement en bas de l'en-tête */
+}
+
+/* Style pour la grille de projecteurs */
+.projector-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr); /* 4 colonnes */
+  grid-auto-rows: auto; /* Hauteur automatique des lignes */
+  gap: 1%; /* Espacement entre les éléments */
+}
+
+/* Style pour chaque carte de projecteur */
+.projector-card {
+  width: 200px; /* Largeur de chaque carte de projecteur */
+  height: 275px;
+  margin: 10px; /* Espacement autour de chaque carte */
+  border: 1px solid #ddd; /* Bordure autour de chaque élément */
+  padding: 16px; /* Marge interne pour l'espacement autour de chaque élément */
+  cursor: pointer; /* Curseur de la souris en pointeur au survol */
+  transition: transform 0.2s ease-in-out; /* Effet de transition au survol */
+  display: flex;
+  flex-direction: column; /* Place les éléments enfants en colonnes */
+  justify-content: space-between; /* Répartit l'espace entre les éléments enfants */
+}
+.projector-details {
+  text-align: center; /* Centre le texte à l'intérieur de chaque card */
+  margin:10px;
+}
+.projector-card:hover {
+  transform: scale(1.05); /* Zoom légèrement au survol */
+}
+
+/* Style pour l'enveloppe du projecteur (cadre) */
+.projector-wrapper {
+
+  text-align: center; /* Centre le contenu horizontalement */
+}
+
+/* Style pour l'image du projecteur */
+.projector-wrapper img {
+  max-width: 100%; /* Assurez-vous que l'image ne dépasse pas la largeur du cadre */
+}
+
+/* ************************************************* */
+/* Pour les écrans mobiles */
+@media (max-width: 768px) {
+  .grid-container {
+    grid-template-columns: repeat(auto-fill, minmax(50%, 1fr)); /* Une seule colonne, largeur minimale de 100% */
+  }
+
+  .projector-card {
+    /* Ajoutez des styles pour adapter les cartes aux écrans mobiles */
+  }
+}
