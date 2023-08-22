@@ -1,29 +1,74 @@
 import { Component, OnInit } from '@angular/core';
 import { ProjectorVisuService } from '../projector-visu.service';
+import { WebSocketService } from '../websocket.service';
+import { trigger, state, style, transition, animate } from '@angular/animations';
+interface WebSocketMessage {
+  projector_id: string;
+  model:string;
+  status: string;
+  // ... other properties
+}
+
 @Component({
   selector: 'app-projector-status-list',
   templateUrl: './projector-status-list.component.html',
-  styleUrls: ['./projector-status-list.component.css']
+  styleUrls: ['./projector-status-list.component.css'],
+    animations: [
+      trigger('statusChange', [
+        state('active', style({ opacity: 1 })),
+        state('idle', style({ opacity: 0.7 })),
+        state('watching', style({ opacity: 0.9 })),
+        state('error', style({ opacity: 0.5 })),
+        transition('* => *', animate('500ms'))
+      ])
+  ]
 })
 export class ProjectorStatusListComponent implements OnInit {
   cinemas: any[] = [];
   selectedCinema: string = '';
   projectors: any[] = [];
   projectorStatus: { [key: string]: string } = {}; // Tableau pour stocker les statuts mis à jour
-
   statusSymbols : { [key: string]: string } =  {
     active: '✔️',
     idle: '💤',
     watching: '👀',
     error: '❌'
   };
+ 
 
-  constructor(private projectorService: ProjectorVisuService) { }
+  constructor(
+    private webSocketService: WebSocketService,
+    private projectorService: ProjectorVisuService) { }
 
   ngOnInit(): void {
     this.loadCinemas();
-    // this.startRealtimeUpdates();
+    this.connectWebSocket();
+    this.webSocketService.updateProjectorStatusFromDatabase(); // Récupérer les dernières entrées au démarrage
   }
+  ngOnDestroy(): void  {
+    this.webSocketService.disconnectWebSocket(); // Déconnecte du serveur WebSocket lorsque le composant est détruit
+  }
+//  // Méthode pour se connecter au serveur WebSocket
+connectWebSocket(): void  {
+  this.webSocketService.connectWebSocket;
+  //this.webSocketService.connectWebSocket('YOUR_UNIQUE_CLIENT_ID_HERE')
+  this.webSocketService.onMessage().subscribe((message: WebSocketMessage) => {
+    // Traite ici le message WebSocket reçu, mettez à jour l'interface utilisateur, et ajoutez des animations
+    console.log('Message WebSocket reçu:', message);
+
+    // Exemple : Mettez à jour le statut d'un projecteur (à adapter à votre logique)
+    const projectorId = message.projector_id;
+    const newStatus = message.status;
+    this.projectorStatus[projectorId] = newStatus;
+
+    // Vous pouvez également déclencher des animations ici en fonction du nouveau statut
+  });
+}
+
+  disconnectWebSocket(): void { 
+    this.webSocketService.disconnectWebSocket();
+  }
+
 // // Pour afficher la liste des cinemas
   loadCinemas(): void {
     this.projectorService.getCinemas().subscribe(data => {
@@ -62,7 +107,7 @@ export class ProjectorStatusListComponent implements OnInit {
         this.projectorStatus[projector.projector_id] = projector.status;
       });
     }
-    
+
     getStatusImage(status: string): string {
       switch (status) {
         case 'active':

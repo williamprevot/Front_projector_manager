@@ -58,6 +58,23 @@ h3 {
 }
 
 /* ************************************************* */
+/* Animation */
+/* projector-status-list.component.css */
+
+@keyframes activeStatusChange {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+@keyframes errorStatusChange {
+  from { transform: scale(1); }
+  to { transform: scale(1.1); }
+}
+
+/* Définissez d
+
+
+/* ************************************************* */
 /* Pour les écrans mobiles */
 @media (max-width: 768px) {
   .grid-container {

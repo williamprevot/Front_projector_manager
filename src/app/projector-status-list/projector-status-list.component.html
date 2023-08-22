@@ -14,9 +14,11 @@
       <div *ngFor="let projector of projectors" class="projector-card" (click)="onProjectorClick(projector)">
         <div class="projector-details">
           <div class="projector-wrapper">
-            <img [src]="getStatusImage(projector.status)">
-            <p>Projecteur ID: {{ projector.projector_id }}</p>
-            <p>Statut: {{ projector.status }} - {{ statusSymbols[projector.status] }}</p>
+            <ng-container [ngSwitch]="projectorStatus[projector.projector_id]">
+              <img [src]="getStatusImage(projectorStatus[projector.projector_id])" [@statusChange]="projectorStatus[projector.projector_id]">
+              <p>Projecteur ID: {{ projector.projector_id }} - {{ statusSymbols[projectorStatus[projector.projector_id]] }}</p>
+              <!-- Autres détails du projecteur -->
+            </ng-container>
           </div>
         </div>
       </div>
