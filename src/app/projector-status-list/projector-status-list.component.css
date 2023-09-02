@@ -55,6 +55,9 @@ h3 {
 /* Style pour l'image du projecteur */
 .projector-wrapper img {
   max-width: 100%; /* Assurez-vous que l'image ne dépasse pas la largeur du cadre */
+  transition: opacity 0.5s;
+ 
+ 
 }
 
 /* ************************************************* */

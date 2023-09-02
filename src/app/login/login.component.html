@@ -1,15 +1,39 @@
-<p>login works!</p>
-<!-- <div class="login-container">
-    <h2>Connexion</h2>
-    <form (ngSubmit)="login()" #loginForm="ngForm">
-      <label for="username">Nom d'utilisateur:</label>
-      <input type="text" id="username" name="username" ngModel required>
-  
-      <label for="password">Mot de passe:</label>
-      <input type="password" id="password" name="password" ngModel required>
-  
-      <button type="submit">Se Connecter</button>
+<div class="login-container">
+    <h2>Sign In</h2>
+    <form (ngSubmit)="login()">
+
+        <!-- Email Input -->
+        <mat-form-field class="input-field">
+            <mat-label>Email Address</mat-label>
+            <input #emailInput="ngModel" matInput [(ngModel)]="email" [ngModelOptions]="{standalone: true}" type="email"
+                required>
+            <mat-error *ngIf="errorMessage && errorMessage.includes('e-mail')">{{ errorMessage }}</mat-error>
+        </mat-form-field>
+
+        <!-- Password Input -->
+        <mat-form-field class="input-field">
+            <mat-label>Password</mat-label>
+            <input matInput [(ngModel)]="password" [ngModelOptions]="{standalone: true}" type="password" required>
+            <mat-error *ngIf="errorMessage && errorMessage.includes('password')">{{ errorMessage }}</mat-error>
+        </mat-form-field>
+
+        <!-- Forgot Password Link -->
+        <p><a (click)="emailInput.valid ? forgotPassword() : errorMessage = 'Veuillez entrer un e-mail valide.'">Forgot
+                password?</a></p>
+
+        <!-- Action Buttons -->
+        <div class="action-buttons">
+            <button class="btn btn-primary" type="submit">Login</button>
+        </div>
     </form>
-    <p *ngIf="loginError" class="error-message">Accès non autorisé. Contactez l'administrateur.</p>
-  </div>
-   -->
+
+    <!-- General Error Message -->
+    <p *ngIf="errorMessage && !errorMessage.includes('e-mail') && !errorMessage.includes('password')"
+        class="error-message">{{ errorMessage }}</p>
+
+    <!-- Redirect to Registration Link -->
+    <div class="redirectToRegister">
+        <span>Don't have an account?<span class="redirect" routerLink="/index/signUp">
+                <a> Sign Up</a></span></span>
+    </div>
+</div>

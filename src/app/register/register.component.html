@@ -1,0 +1,54 @@
+<div class="register-container">
+  <h2>Sign Up</h2>
+  <form (submit)="register()">
+    <!-- Organization Input -->
+    <mat-form-field class="input-field">
+      <mat-label>Organistation Name</mat-label>
+      <input matInput [(ngModel)]="organisation" [ngModelOptions]="{standalone: true}" required>
+    </mat-form-field>
+
+    <!-- Role Selector -->
+    <mat-form-field class="input-field">
+      <mat-label>Your Role In Organistation</mat-label>
+      <mat-select [(ngModel)]="role" [ngModelOptions]="{standalone: true}" required>
+        <mat-option value="gerant">Gérant</mat-option>
+        <mat-option value="technicien">Technicien</mat-option>
+        <mat-option value="coequipier">Coéquipier</mat-option>
+      </mat-select>
+    </mat-form-field>
+
+    <!-- Email Input -->
+    <mat-form-field class="input-field">
+      <mat-label>Email Adress</mat-label>
+      <input matInput [(ngModel)]="email" [ngModelOptions]="{standalone: true}" type="email" placeholder="Email Adress" required>
+    </mat-form-field>
+
+    <!-- Password Input -->
+    <mat-form-field class="input-field">
+      <mat-label>Password</mat-label>
+      <input matInput [(ngModel)]="password" [ngModelOptions]="{standalone: true}" type="password" placeholder="Password" required>
+    </mat-form-field>
+
+    <!-- Password Verification Input -->
+    <mat-form-field class="input-field">
+      <mat-label>Password Verif</mat-label>
+      <input matInput [(ngModel)]="passwordVerif" [ngModelOptions]="{standalone: true}" type="password" placeholder="Password Verif" required>
+    </mat-form-field>
+
+    <!-- Action Buttons -->
+    <div class="action-buttons">
+      <button class="btn btn-primary" type="submit">Register</button>
+      <!-- <button mat-button (click)="GoogleAuth()">Sign in with Google</button> -->
+    </div>
+    
+    <!-- Error Message -->
+    <p *ngIf="errorMessage" class="error">{{ errorMessage }}</p>
+
+    <!-- Redirect to Login -->
+    <div class="redirectToLogin">
+      <span>Already have an account?<span class="redirect" routerLink="/index/signIn">
+          <a> Sign In</a></span></span>
+    </div>
+
+  </form>
+</div>

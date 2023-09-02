@@ -1,0 +1,8 @@
+<ul>
+    <li *ngFor="let alert of alerts">
+        <strong>Alert ID:</strong> {{alert.alert_id}} <br>
+        <strong>Projector ID:</strong> {{alert.projector_id}} <br>
+        <strong>Alert Message:</strong> {{alert.alert_message}} <br>
+        <strong>Timestamp:</strong> {{alert.timestamp | date}}
+    </li>
+</ul>

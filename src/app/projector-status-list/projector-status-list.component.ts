@@ -1,139 +1,141 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { ProjectorVisuService } from '../projector-visu.service';
 import { WebSocketService } from '../websocket.service';
 import { trigger, state, style, transition, animate } from '@angular/animations';
-interface WebSocketMessage {
-  projector_id: string;
-  model:string;
-  status: string;
-  // ... other properties
-}
+import { Router } from '@angular/router';
+import { Subscription } from 'rxjs';
+import { AuthService } from '../auth.service'; // Assurez-vous d'ajuster le chemin en fonction de votre configuration
+import { ChangeDetectorRef } from '@angular/core';
+import { ProjectorStatusUpdate } from '../projector-status-update';
+
 
 @Component({
   selector: 'app-projector-status-list',
   templateUrl: './projector-status-list.component.html',
   styleUrls: ['./projector-status-list.component.css'],
-    animations: [
-      trigger('statusChange', [
-        state('active', style({ opacity: 1 })),
-        state('idle', style({ opacity: 0.7 })),
-        state('watching', style({ opacity: 0.9 })),
-        state('error', style({ opacity: 0.5 })),
-        transition('* => *', animate('500ms'))
-      ])
+  animations: [
+    trigger('statusChange', [
+      state('active', style({ opacity: 1 })),
+      state('idle', style({ opacity: 0.7 })),
+      state('watching', style({ opacity: 0.9 })),
+      state('error', style({ opacity: 0.5 })),
+      transition('* <=> *', animate('500ms'))
+    ])
   ]
 })
-export class ProjectorStatusListComponent implements OnInit {
+export class ProjectorStatusListComponent implements OnInit, OnDestroy {
+
   cinemas: any[] = [];
   selectedCinema: string = '';
   projectors: any[] = [];
-  projectorStatus: { [key: string]: string } = {}; // Tableau pour stocker les statuts mis à jour
-  statusSymbols : { [key: string]: string } =  {
+  projectorStatus: { [key: string]: string } = {};
+  isLoading: boolean = false;
+  statusUpdateTimestamp: { [key: string]: number } = {};
+
+  private userId: string | null = null;
+  
+
+  statusSymbols: { [key: string]: string } = {
     active: '✔️',
     idle: '💤',
     watching: '👀',
     error: '❌'
   };
- 
 
   constructor(
+    private changeDetector: ChangeDetectorRef,
+    private router: Router,
     private webSocketService: WebSocketService,
-    private projectorService: ProjectorVisuService) { }
+    private projectorService: ProjectorVisuService,
+    private authService: AuthService) {} // Injectez AuthService
 
-  ngOnInit(): void {
-    this.loadCinemas();
-    this.connectWebSocket();
-    this.webSocketService.updateProjectorStatusFromDatabase(); // Récupérer les dernières entrées au démarrage
-  }
-  ngOnDestroy(): void  {
-    this.webSocketService.disconnectWebSocket(); // Déconnecte du serveur WebSocket lorsque le composant est détruit
-  }
-//  // Méthode pour se connecter au serveur WebSocket
-connectWebSocket(): void  {
-  this.webSocketService.connectWebSocket;
-  //this.webSocketService.connectWebSocket('YOUR_UNIQUE_CLIENT_ID_HERE')
-  this.webSocketService.onMessage().subscribe((message: WebSocketMessage) => {
-    // Traite ici le message WebSocket reçu, mettez à jour l'interface utilisateur, et ajoutez des animations
-    console.log('Message WebSocket reçu:', message);
+    ngOnInit(): void {
+      this.loadCinemas();
+      this.connectWebSocket();
+    }
 
-    // Exemple : Mettez à jour le statut d'un projecteur (à adapter à votre logique)
-    const projectorId = message.projector_id;
-    const newStatus = message.status;
-    this.projectorStatus[projectorId] = newStatus;
-
-    // Vous pouvez également déclencher des animations ici en fonction du nouveau statut
-  });
-}
-
-  disconnectWebSocket(): void { 
+  ngOnDestroy(): void {
     this.webSocketService.disconnectWebSocket();
   }
 
-// // Pour afficher la liste des cinemas
-  loadCinemas(): void {
-    this.projectorService.getCinemas().subscribe(data => {
-      this.cinemas = data;
-      // Charger les projecteurs pour le premier cinéma (si disponible)
-      if (this.cinemas.length > 0) {
-        this.selectedCinema = this.cinemas[0].cinema_id; // Sélectionner le premier cinéma de la liste
-        this.loadProjectorsByCinema(this.cinemas[0].cinema_id);
+  connectWebSocket(): void {
+    this.authService.getCurrentUserId().then(userId => {
+      this.userId = userId;
+      if (this.userId) {
+        this.webSocketService.connectWebSocket(this.userId);
       }
     });
+
+    this.webSocketService.onMessage().subscribe(
+      (message: ProjectorStatusUpdate) => {
+        console.log('Message WebSocket reçu:', message);
+        this.projectorStatus[message.projectorId] = message.status;  // ajusté ici
+        this.statusUpdateTimestamp[message.projectorId] = Date.now();  // et ici
+    
+        this.changeDetector.detectChanges();
+      },
+      error => console.error('WebSocket Error:', error)
+    );
+    
   }
-  
- // // Pour afficher les porjecteurs par cinema 
+
+  loadCinemas(): void {
+    this.projectorService.getCinemas().subscribe(
+      data => {
+        this.cinemas = data;
+        this.selectedCinema = this.cinemas[0]?.cinema_id || '';
+        if (this.selectedCinema) {
+          this.loadProjectorsByCinema(this.selectedCinema);
+        }
+      },
+      error => console.error('Error fetching cinemas:', error)
+    );
+  }
+
   loadProjectorsByCinema(cinemaId: string): void {
+    this.isLoading = true;
     this.projectorService.getProjectorsByCinemaId(cinemaId).subscribe(
       (projectors) => {
         this.projectors = projectors;
-        this.updateProjectorStatus(); // Mettre à jour les statuts de projecteurs
+        if (Array.isArray(this.projectors)) {
+          this.projectors.forEach((projector) => {
+            this.projectorStatus[projector.projector_id] = projector.status;
+            this.isLoading = false;
+            this.webSocketService.requestLatestProjectorStatusFromServer(cinemaId, projector.projector_id);
+          });
+        }else {
+            console.warn('Expected projectors to be an array, but received:', this.projectors);
+          }
       },
       (error) => {
         console.error('Error loading projectors:', error);
+        this.isLoading = false;
       }
     );
   }
- // // Pour selectionner un cinema 
-  onCinemaSelect(): void {
+
+  onCinemaSelect(selectedValue: string): void {
+    this.projectors = [];
+    this.isLoading = true;
+    this.selectedCinema = selectedValue;
+
     if (this.selectedCinema) {
       this.loadProjectorsByCinema(this.selectedCinema);
-    } else {
-      this.projectors = [];
     }
   }
-    // Méthode pour mettre à jour les statuts de projecteurs
-    updateProjectorStatus() {
-      this.projectors.forEach((projector) => {
-        this.projectorStatus[projector.projector_id] = projector.status;
-      });
-    }
 
-    getStatusImage(status: string): string {
-      switch (status) {
-        case 'active':
-          return 'assets/active.png';
-        case 'idle':
-          return 'assets/idle.png';
-        case 'watching':
-          return 'assets/watching.png';
-        case 'error':
-          return 'assets/error.png';
-        default:
-          return 'assets/default.png'; // Image par défaut si le statut est inconnu
-      }
+  getStatusImage(status: string): string {
+    switch (status) {
+      case 'active': return 'assets/active.png';
+      case 'idle': return 'assets/idle.png';
+      case 'watching': return 'assets/watching.png';
+      case 'error': return 'assets/error.png';
+      default: return 'assets/default.png';
     }
-  
-    onProjectorClick(projector: any): void {
-      // Gérez ici le comportement lorsque l'utilisateur clique sur un projecteur.
-      // Vous pouvez ouvrir une boîte de dialogue, afficher des détails, etc.
-      // Utilisez les données du projecteur (projector) pour personnaliser l'action.
-      console.log('Projector clicked:', projector);
-    }
+  }
 
-  // Méthode pour démarrer les mises à jour en temps réel
-  // startRealtimeUpdates() {
-  //   setInterval(() => {
-  //     this.onCinemaSelect();
-  //   }, 1000); // Mettez à jour toutes les 5 secondes (vous pouvez ajuster l'intervalle)
-  // }
+  onProjectorClick(projector: any): void {
+    this.router.navigate(['cinemas', projector.cinema_id, 'projectors', projector.projector_id]);
+  }
+
 }

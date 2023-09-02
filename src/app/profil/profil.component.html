@@ -1,0 +1,73 @@
+<!-- Sidebar navigation -->
+<div class="container-fluid">
+  <div class="row">
+    <nav class="col-md-2 d-md-block bg-light sidebar">
+      <div class="sidebar-sticky">
+        <ul class="nav flex-column">
+          <!-- Creat cinema -->
+          <li class="nav-item active">
+            <a class="nav-link" (click)="navigateToProjectors('cinema_id_1')">
+              View cinemas
+            </a>
+          </li>
+          <!-- Invite Team Member -->
+          <li class="nav-item">
+            <a class="nav-link">
+              Send Invitation
+            </a>
+          </li>
+          <!-- Add Team Members -->
+          <li class="nav-item">
+            <a class="nav-link">
+              Add team Members
+            </a>
+          </li>
+          <!-- Calling SignOut() Api from AuthService -->
+          <li class="nav-item">
+            <a class="nav-link" (click)="authService.SignOut()">
+              <i class="fas fa-sign-out-alt"></i>Log out
+            </a>
+          </li>
+        </ul>
+      </div>
+    </nav>
+    <!-- Main content -->
+    <main role="main" class="col-md-9 ml-sm-auto col-lg-10 px-4">
+      <div class="inner-adjust">
+        <div class="pt-3 pb-2 mb-3 border-bottom">
+          <h1 class="h2">User Profile</h1>
+        </div>
+        <!-- Show user data when logged in -->
+        <div class="row" *ngIf="user">
+          <!-- <div>
+            {{ user | json }}
+          </div> -->
+          <div>
+            <div>
+              <img class="profil" src="{{(user.photoURL) ? user.photoURL : '/assets/team.png'}}" alt="{{user.email}}">
+              <p><strong>Organisation:</strong> {{user.email}}</p>
+              <p><strong>Organisation:</strong> {{user.organisation}}</p>
+              <p><strong>Role:</strong> {{user.role}}</p>
+              <p><strong>Team ID:</strong> {{user.team}}</p>
+              <!-- Form to edit user information -->
+              <!-- <form (ngSubmit)="updateUserProfile()">
+                <div class="input-group">
+                  
+                  <input [(ngModel)]="user.email" name="email" placeholder="Email">
+                </div>
+                <div class="input-group">
+                  <input [(ngModel)]="user.organisation" name="organisation" placeholder="Organisation">
+                </div>
+                <div class="input-group">
+                  <input [(ngModel)]="user.role" name="role" placeholder="Rôle">
+                </div>
+                <br>
+                <button type="submit">Mettre à jour</button>
+              </form> -->
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+</div>

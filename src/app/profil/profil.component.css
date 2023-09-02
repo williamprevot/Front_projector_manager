@@ -1,0 +1,11 @@
+.profil{
+    width: 100px;   
+    height: auto;  /* Pour maintenir le ratio d'aspect de l'image */
+    max-width: 100%; /* Pour s'assurer qu'elle ne dépasse pas la largeur de son conteneur */
+}
+
+.input-group {
+    margin-top: 15px;
+    position: relative;
+    border-radius: 50px;
+  }

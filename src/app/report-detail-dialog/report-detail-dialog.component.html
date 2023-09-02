@@ -1,0 +1,30 @@
+<h2 mat-dialog-title>Report Details</h2>
+<div mat-dialog-content>
+  <!-- Vue d'affichage -->
+  <ng-container *ngIf="!editing">
+    <p><strong>Date:</strong> {{ data.date | date:'short' }}</p>
+    <p><strong>Type:</strong> {{ data.type }}</p>
+    <p><strong>Responsible ID:</strong> {{ data.responsible }}</p>
+    <p><strong>Message:</strong> {{ data.message }}</p>
+  </ng-container>
+
+  <!-- Vue d'édition -->
+  <ng-container *ngIf="editing">
+    <mat-form-field appearance="outline" class="full-width">
+      <mat-label>Mise à jour du message</mat-label>
+      <input matInput [(ngModel)]="updatedMessage">
+    </mat-form-field>
+    <!-- Vous pouvez ajouter ici d'autres champs pour la mise à jour, si nécessaire. -->
+  </ng-container>
+</div>
+
+<div mat-dialog-actions>
+  <!-- Bouton de mise à jour visible pour 'gerant' et 'technicien' -->
+  <button *ngIf="currentUser.role === 'gerant' || currentUser.role === 'technicien'" mat-button (click)="startEditing()">Edit</button>
+  <button *ngIf="editing" mat-button (click)="updateReport(data.reportId, updatedMessage)">Update</button>
+  
+  <!-- Bouton de suppression visible uniquement pour 'gerant' -->
+  <button *ngIf="currentUser.role === 'gerant'" mat-button (click)="deleteReport(data.reportId)">Delete</button>
+
+  <button mat-button mat-dialog-close>Close</button>
+</div>

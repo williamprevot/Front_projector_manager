@@ -1,23 +1,34 @@
-<div >
+<div>
+  <!-- Cinema Selector -->
   <div class="cinema-selector">
-    <h2>Visualisation des projecteurs</h2>
-    <label for="cinemaSelect">Sélectionnez un cinéma:</label>
-    <select id="cinemaSelect" [(ngModel)]="selectedCinema" (change)="onCinemaSelect()">
-      <option value="">Sélectionnez un cinéma</option>
-      <option *ngFor="let cinema of cinemas" [value]="cinema.cinema_id">{{ cinema.cinema_id }}</option>
-    </select>
+    <mat-form-field class="input-field">
+      <mat-label>Sélectionnez un cinéma</mat-label>
+      <mat-select [(value)]="selectedCinema" (selectionChange)="onCinemaSelect(selectedCinema)">
+        <mat-option *ngFor="let cinema of cinemas" [value]="cinema.cinema_id">
+          {{ cinema.cinema_id }}
+        </mat-option>
+      </mat-select>
+    </mat-form-field>
   </div>
 
-  <div class="grid-container" *ngIf="selectedCinema">
-    <h3>Projecteurs pour {{ selectedCinema }}</h3>
+  <!-- Loading Animation -->
+  <div class="loading-animation" *ngIf="isLoading">
+    <mat-progress-spinner mode="indeterminate" diameter="50"></mat-progress-spinner>
+    <p>Chargement des projecteurs...</p>
+  </div>
+
+  <!-- Projectors Grid -->
+  <div class="grid-container" *ngIf="selectedCinema && !isLoading">
+    <h3>Projecteurs pour le {{ selectedCinema }} :</h3>
     <div class="projector-grid">
       <div *ngFor="let projector of projectors" class="projector-card" (click)="onProjectorClick(projector)">
         <div class="projector-details">
           <div class="projector-wrapper">
             <ng-container [ngSwitch]="projectorStatus[projector.projector_id]">
-              <img [src]="getStatusImage(projectorStatus[projector.projector_id])" [@statusChange]="projectorStatus[projector.projector_id]">
-              <p>Projecteur ID: {{ projector.projector_id }} - {{ statusSymbols[projectorStatus[projector.projector_id]] }}</p>
-              <!-- Autres détails du projecteur -->
+              <img [src]="getStatusImage(projectorStatus[projector.projector_id])"
+                [@statusChange]="projectorStatus[projector.projector_id]">
+              <p>Projecteur ID: {{ projector.projector_id }} - {{ statusSymbols[projectorStatus[projector.projector_id]]
+                }}</p>
             </ng-container>
           </div>
         </div>

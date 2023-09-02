@@ -1,0 +1,73 @@
+<div fxLayout="row" fxLayout.lt-md="column" fxLayoutGap="20px" class="container">
+
+  <!-- Projector Details -->
+  <div *ngIf="!projectorDetails.projector_id" class="loading">
+      <mat-progress-spinner mode="indeterminate" diameter="50"></mat-progress-spinner>
+      <p>Chargement des détails du projecteur...</p>
+  </div>
+
+  <mat-card *ngIf="projectorDetails.projector_id && currentStatus" fxFlex="50" fxFlexOrder="1">
+      <mat-card-header>
+          <mat-card-title>Détails du Projecteur</mat-card-title>
+      </mat-card-header>
+      <mat-card-content>
+          <p><strong>ID :</strong> {{ projectorDetails.projector_id }}</p>
+          <p><strong>Cinema :</strong> {{ projectorDetails.cinema_id }}</p>
+          <p><strong>Modèle :</strong> {{ projectorDetails.model }}</p>
+          <p><strong>State :</strong> {{ projectorDetails.status }}</p>
+          <p><strong>Current State :</strong> {{ currentStatus.status }}</p>
+      </mat-card-content>
+  </mat-card>
+
+  <!-- Reports history and form for new report -->
+  <mat-card fxFlex="50" fxFlexOrder="2">
+      <mat-card-header>
+          <mat-card-title>Maintenance et Pannes</mat-card-title>
+      </mat-card-header>
+      <mat-card-content>
+          <!-- Dropdown for report History -->
+          <mat-form-field class="full-width">
+              <mat-label>Historique des Rapports</mat-label>
+              <mat-select>
+                  <mat-option *ngIf="reports.length === 0">Aucun rapport trouvé</mat-option>
+                  <mat-option *ngFor="let report of reports" [value]="report.reportId" (click)="showReportDetails(report)">
+                      {{ report.date | date:'short' }} - {{ report.type }}
+                  </mat-option>
+              </mat-select>
+          </mat-form-field>
+
+          <!-- Button to show the form -->
+          <button mat-raised-button color="primary" (click)="toggleFormVisibility()">Editer un nouveau rapport</button>
+
+          <div *ngIf="showForm">
+              <!-- Form for new report -->
+              <form [formGroup]="reportForm" (ngSubmit)="onSubmit()">
+
+                  <mat-form-field class="full-width">
+                      <mat-label>Type de Rapport</mat-label>
+                      <mat-select formControlName="reportType">
+                          <mat-option value="maintenance">Maintenance</mat-option>
+                          <mat-option value="reparation">Réparation</mat-option>
+                      </mat-select>
+                      <mat-error *ngIf="reportForm.get('reportType')?.hasError('required')">
+                          Sélectionnez un type.
+                      </mat-error>
+                  </mat-form-field>
+
+                  <!-- Show these only if reportType has a value -->
+                  <div *ngIf="reportForm.get('reportType')?.value">
+                      <mat-form-field class="full-width">
+                          <textarea matInput formControlName="newMessage" placeholder="Entrez les détails..." required></textarea>
+                          <mat-error *ngIf="reportForm.get('newMessage')?.hasError('required')">
+                              Ce champ est obligatoire.
+                          </mat-error>
+                      </mat-form-field>
+
+                      <!-- Disable button if form is invalid -->
+                      <button mat-raised-button color="primary" type="submit" [disabled]="reportForm.invalid">Envoyer</button>
+                  </div>
+              </form>
+          </div>
+      </mat-card-content>
+  </mat-card>
+</div>

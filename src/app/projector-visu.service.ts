@@ -8,17 +8,18 @@ import { Observable } from 'rxjs';
 })
 export class ProjectorVisuService {
   //appelle securisé a l api
-  private apiUrl = 'http://localhost:3000/api';
+  private apiUrl = environment.apiUrl;
   private apiKey = environment.apiKey;
 
   constructor(private http: HttpClient) { }
 
+  //---------------Projectors-status-list-component-------------------//
   getCinemas(): Observable<any[]> {
     const headers = new HttpHeaders({
       'Content-Type': 'application/json',
       'X-API-Key': this.apiKey
     });
-    return this.http.get<any[]>(`${this.apiUrl}/cinemas`);
+    return this.http.get<any[]>(`${this.apiUrl}/cinemas`, { headers });
   }
 
   getProjectorsByCinemaId(cinemaId: string): Observable<any[]> {
@@ -26,15 +27,38 @@ export class ProjectorVisuService {
       'Content-Type': 'application/json',
       'X-API-Key': this.apiKey
     });
-    return this.http.get<any[]>(`${this.apiUrl}/${cinemaId}/projectors`, { headers });
+    return this.http.get<any[]>(`${this.apiUrl}/cinemas/${cinemaId}/projectors`, { headers });
   }
-  
-  
-  getProjectorStatus(): Observable<any[]> {
+
+  getProjectorStatusByCinemaId(cinemaId: string,projectorId: string): Observable<any[]> {
     const headers = new HttpHeaders({
       'Content-Type': 'application/json',
       'X-API-Key': this.apiKey
     });
-    return this.http.get<any[]>(this.apiUrl);
+    return this.http.get<any[]>(`${this.apiUrl}cinemas/${cinemaId}/projectors/${projectorId}`, { headers });
+  }
+  //---------------Projector-details-component-------------------//
+  getProjectorDetails(cinemaId: string, projectorId: string): Observable<any> {
+    const headers = new HttpHeaders({
+      'Content-Type': 'application/json',
+      'X-API-Key': this.apiKey
+    });
+    return this.http.get<any>(`${this.apiUrl}/cinemas/${cinemaId}/projectors/${projectorId}`, { headers });
+  }
+
+  // Reports = maintenance programmée + reparation imprevu
+  getReportsByProjectorId(cinemaId: string, projectorId: string): Observable<any[]> {
+    const headers = new HttpHeaders({
+      'Content-Type': 'application/json',
+      'X-API-Key': this.apiKey
+    });
+    return this.http.get<any[]>(`${this.apiUrl}/cinemas/${cinemaId}/projectors/${projectorId}/details/reports`, { headers });
+  }
+  addMaintenanceReport(cinemaId: string, projectorId: string, report: any): Observable<any> {
+    const headers = new HttpHeaders({
+      'Content-Type': 'application/json',
+      'X-API-Key': this.apiKey
+    });
+    return this.http.post<any>(`${this.apiUrl}/cinemas/${cinemaId}/projectors/${projectorId}/details/reports`, report, { headers });
   }
 }
