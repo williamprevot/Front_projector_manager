@@ -25,14 +25,24 @@ export class AuthService {
   ) {
     this.afAuth.authState.subscribe((user) => {
       if (user && this.isValidUserData(user)) {
-        this.userData = user;
-        localStorage.setItem('user', JSON.stringify(this.userData));
+        // this.userData = user;
+        // localStorage.setItem('user', JSON.stringify(this.userData));
+        this.initializeUserDataFromMongo(user.uid);
       } else {
         localStorage.setItem('user', 'null');
       }
     });
   }
-
+  private initializeUserDataFromMongo(uid: string): void {
+    this.GetUserDataFromMongoDB(uid).then(userProfile => {
+      console.log("MongoDB User Profile:", userProfile);
+      if (userProfile) {
+        localStorage.setItem('user', JSON.stringify(userProfile));
+      }
+    }).catch(error => {
+      console.error("Error fetching user data from MongoDB:", error);
+    });
+  }
   private isValidUserData(data: any): boolean {
     // Check if data exists
     if (!data) return false;
@@ -92,14 +102,14 @@ export class AuthService {
       if (!uid) throw new Error("User UID not found.");
 
       // Récupération des données utilisateur de MongoDB
-      const userProfile = await this.GetUserDataFromMongoDB(uid);
-      console.log("MongoDB User Profile:", userProfile);
+       const userProfile = await this.GetUserDataFromMongoDB(uid);
+       console.log("MongoDB User Profile:", userProfile);
       // // Fusionner les données d'authentification Firebase avec userProfile
       // const completeUserData = { ...result.user, ...userProfile };
       // console.log("Complete User Profile:", completeUserData);
       // Stockez completeUserData dans localStorage
-      localStorage.setItem('user', JSON.stringify(userProfile));
-
+       localStorage.setItem('user', JSON.stringify(userProfile));
+  
       this.ngZone.run(() => {
         this.router.navigate(['profil']);
       });

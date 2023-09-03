@@ -3,11 +3,12 @@ import { ProjectorVisuService } from '../projector-visu.service';
 import { WebSocketService } from '../websocket.service';
 import { trigger, state, style, transition, animate } from '@angular/animations';
 import { Router } from '@angular/router';
-import { Subscription } from 'rxjs';
+import { Subscription, interval } from 'rxjs';
+import { startWith, switchMap } from 'rxjs/operators';
 import { AuthService } from '../auth.service'; // Assurez-vous d'ajuster le chemin en fonction de votre configuration
 import { ChangeDetectorRef } from '@angular/core';
 import { ProjectorStatusUpdate } from '../projector-status-update';
-
+import { Observable, of } from 'rxjs';
 
 @Component({
   selector: 'app-projector-status-list',
@@ -15,10 +16,10 @@ import { ProjectorStatusUpdate } from '../projector-status-update';
   styleUrls: ['./projector-status-list.component.css'],
   animations: [
     trigger('statusChange', [
-      state('active', style({ opacity: 1 })),
-      state('idle', style({ opacity: 0.7 })),
-      state('watching', style({ opacity: 0.9 })),
-      state('error', style({ opacity: 0.5 })),
+      state('active', style({ opacity: 0.8 })),
+      state('idle', style({ opacity: 0.8 })),
+      state('watching', style({ opacity: 0.8 })),
+      state('error', style({ opacity: 0.8 })),
       transition('* <=> *', animate('500ms'))
     ])
   ]
@@ -33,7 +34,7 @@ export class ProjectorStatusListComponent implements OnInit, OnDestroy {
   statusUpdateTimestamp: { [key: string]: number } = {};
 
   private userId: string | null = null;
-  
+  private statusUpdateSubscription: Subscription | null = null;
 
   statusSymbols: { [key: string]: string } = {
     active: '✔️',
@@ -47,15 +48,18 @@ export class ProjectorStatusListComponent implements OnInit, OnDestroy {
     private router: Router,
     private webSocketService: WebSocketService,
     private projectorService: ProjectorVisuService,
-    private authService: AuthService) {} // Injectez AuthService
+    private authService: AuthService) { } // Injectez AuthService
 
-    ngOnInit(): void {
-      this.loadCinemas();
-      this.connectWebSocket();
-    }
+  ngOnInit(): void {
+    this.loadCinemas();
+    this.connectWebSocket();
+    this.startPeriodicStatusUpdates();
+
+  }
 
   ngOnDestroy(): void {
     this.webSocketService.disconnectWebSocket();
+    this.statusUpdateSubscription?.unsubscribe();  // Désabonner de la mise à jour périodique
   }
 
   connectWebSocket(): void {
@@ -65,19 +69,19 @@ export class ProjectorStatusListComponent implements OnInit, OnDestroy {
         this.webSocketService.connectWebSocket(this.userId);
       }
     });
-
     this.webSocketService.onMessage().subscribe(
       (message: ProjectorStatusUpdate) => {
         console.log('Message WebSocket reçu:', message);
         this.projectorStatus[message.projectorId] = message.status;  // ajusté ici
         this.statusUpdateTimestamp[message.projectorId] = Date.now();  // et ici
-    
+
         this.changeDetector.detectChanges();
       },
       error => console.error('WebSocket Error:', error)
     );
-    
+
   }
+
 
   loadCinemas(): void {
     this.projectorService.getCinemas().subscribe(
@@ -103,9 +107,9 @@ export class ProjectorStatusListComponent implements OnInit, OnDestroy {
             this.isLoading = false;
             this.webSocketService.requestLatestProjectorStatusFromServer(cinemaId, projector.projector_id);
           });
-        }else {
-            console.warn('Expected projectors to be an array, but received:', this.projectors);
-          }
+        } else {
+          console.warn('Expected projectors to be an array, but received:', this.projectors);
+        }
       },
       (error) => {
         console.error('Error loading projectors:', error);
@@ -114,6 +118,24 @@ export class ProjectorStatusListComponent implements OnInit, OnDestroy {
     );
   }
 
+  startPeriodicStatusUpdates(): void {
+    // Commencez à vérifier le statut toutes les 5 secondes
+    this.statusUpdateSubscription = interval(5000)
+      .pipe(
+        startWith(0),
+        switchMap(() => this.requestProjectorStatusUpdates())
+      )
+      .subscribe();
+       
+  }
+  requestProjectorStatusUpdates(): Observable<void> {
+    if (this.selectedCinema && Array.isArray(this.projectors)) {
+      this.projectors.forEach((projector) => {
+        this.webSocketService.requestLatestProjectorStatusFromServer(this.selectedCinema, projector.projector_id);
+      });
+    }
+    return of(void 0);  // Returns a basic observable to keep the pipe happy.
+  }
   onCinemaSelect(selectedValue: string): void {
     this.projectors = [];
     this.isLoading = true;
