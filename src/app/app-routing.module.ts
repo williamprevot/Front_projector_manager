@@ -18,7 +18,7 @@ const routes: Routes = [
   { path: 'cinemas/:cinemaId/projectors', component: ProjectorStatusListComponent },
   { path: 'cinemas/:cinemaId/projectors/:projectorId', component: ProjectorDetailComponent },
   { path: 'profil',canActivate: [AuthGuard],  component: ProfilComponent },
-  {path:'alert', component: AlertSurveilComponent }
+  {path:'alerts', component: AlertSurveilComponent }
 ];
 
 @NgModule({

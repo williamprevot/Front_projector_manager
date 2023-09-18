@@ -1,4 +1,11 @@
+<!-- Toolbar avec l'icône d'alerte -->
+<div class="toolbar">
+  <button mat-icon-button [matBadge]="totalAlerts" matBadgeColor="warn" (click)="goToAlerts()">
+    <mat-icon>notifications</mat-icon>
+  </button>
+</div>
 <div>
+
   <!-- Cinema Selector -->
   <div class="cinema-selector">
     <mat-form-field class="input-field">
@@ -14,6 +21,8 @@
   <!-- Loading Animation -->
   <div class="loading-animation" *ngIf="isLoading">
     <mat-progress-spinner mode="indeterminate" diameter="50"></mat-progress-spinner>
+    <br>
+    <br>
     <p>Chargement des projecteurs...</p>
   </div>
 

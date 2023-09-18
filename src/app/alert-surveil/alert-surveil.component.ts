@@ -8,25 +8,33 @@ import { AlertsErrorsSurveyService } from '../alerts-errors-survey.service';
 })
 export class AlertSurveilComponent implements OnInit {
   errors: any[] = [];
-  alerts: any[] = [];
+  errorsByCinema: { [cinemaId: string]: any[] } = {};
+  
+  objectKeys(obj: any) {
+    return Object.keys(obj);
+  }
+
   constructor(private alertsErrorsSurveyService: AlertsErrorsSurveyService) { }
 
   ngOnInit(): void {
     this.fetchErrors();
-    this.fetchAlerts();
+    
   }
+
+
+
 
   fetchErrors(): void {
-    this.alertsErrorsSurveyService.getErrors({ cinema_id: 'votreCinemaId' }) // Remplacez 'votreCinemaId' par l'ID que vous souhaitez utiliser
+    this.alertsErrorsSurveyService.getErrors()
       .subscribe(data => {
-        this.errors = data;
-      });
-  }
-
-  fetchAlerts(): void {
-    this.alertsErrorsSurveyService.getAlerts({ projector_id: 'votreProjectorId' }) // Remplacez 'votreProjectorId' par l'ID que vous souhaitez utiliser
-      .subscribe(data => {
-        this.alerts = data;
+        for (const error of data) {
+          if (!this.errorsByCinema[error.cinema_id]) {
+            this.errorsByCinema[error.cinema_id] = [];
+          }
+          this.errorsByCinema[error.cinema_id].push(error);
+        }
+      }, error => {
+        console.error('Error fetching cinema alerts:', error);
       });
   }
 

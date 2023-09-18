@@ -6,6 +6,10 @@ div {
   margin: 20px; /* Espacement autour de la section principale */
 }
 
+.toolbar {
+  position: absolute;
+  right: 0;
+}
 /* Style pour la sélection de cinéma */
 .cinema-selector {
   margin-bottom: 20px; /* Espacement en bas de la sélection de cinéma */

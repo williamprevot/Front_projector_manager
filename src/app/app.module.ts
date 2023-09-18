@@ -32,7 +32,8 @@ import { ReportDetailDialogComponent } from './report-detail-dialog/report-detai
 import { ForgotPasswordComponent } from './forgot-password/forgot-password.component';
 import { ToastrModule } from 'ngx-toastr';
 import { AlertSurveilComponent } from './alert-surveil/alert-surveil.component';
-
+import { MatBadgeModule } from '@angular/material/badge';
+import { GraphAnalysisComponent } from './graph-analysis/graph-analysis.component';
 
 const config: SocketIoConfig = {
   url: 'http://localhost:8080', options: {
@@ -55,6 +56,7 @@ const config: SocketIoConfig = {
     ReportDetailDialogComponent,
     ForgotPasswordComponent,
     AlertSurveilComponent,
+    GraphAnalysisComponent,
     
   ],
   imports: [
@@ -78,7 +80,8 @@ const config: SocketIoConfig = {
     AngularFirestoreModule,
     AngularFireStorageModule,
     AngularFireDatabaseModule,
-    ToastrModule.forRoot()
+    ToastrModule.forRoot(),
+    MatBadgeModule 
 
   ],
   providers: [

@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { environment } from '../environments/environment';
 @Injectable({
@@ -18,15 +18,8 @@ export class AlertsErrorsSurveyService {
       'Content-Type': 'application/json',
       'X-API-Key': this.apiKey
     });
-    return this.http.get<any[]>(`${this.apiUrl}/errors`, { headers });
+    const params = filters ? new HttpParams({ fromObject: filters }) : undefined;
+    return this.http.get<any[]>(`${this.apiUrl}/cinemas/errors`, { headers, params });
   }
 
-  // Récupère les alertes avec des filtres optionnels
-  getAlerts(filters?: { cinema_id?: string, projector_id?: string }): Observable<any[]> {
-    const headers = new HttpHeaders({
-      'Content-Type': 'application/json',
-      'X-API-Key': this.apiKey
-    });
-    return this.http.get<any[]>(`${this.apiUrl}/alerts`, { headers });
-  }
 }

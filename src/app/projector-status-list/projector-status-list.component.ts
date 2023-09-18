@@ -32,7 +32,7 @@ export class ProjectorStatusListComponent implements OnInit, OnDestroy {
   projectorStatus: { [key: string]: string } = {};
   isLoading: boolean = false;
   statusUpdateTimestamp: { [key: string]: number } = {};
-
+  totalAlerts: number = 0;
   private userId: string | null = null;
   private statusUpdateSubscription: Subscription | null = null;
 
@@ -158,6 +158,10 @@ export class ProjectorStatusListComponent implements OnInit, OnDestroy {
 
   onProjectorClick(projector: any): void {
     this.router.navigate(['cinemas', projector.cinema_id, 'projectors', projector.projector_id]);
+  }
+
+  goToAlerts() {
+    this.router.navigate(['/alerts']);
   }
 
 }

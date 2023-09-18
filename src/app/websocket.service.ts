@@ -3,7 +3,6 @@ import { Socket, SocketIoConfig } from 'ngx-socket-io';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { BehaviorSubject, Observable, throwError } from 'rxjs';
 import { catchError, tap } from 'rxjs/operators';
-import { environment } from '../environments/environment';
 import { ProjectorStatusUpdate } from './projector-status-update';
 const config: SocketIoConfig = { 
   url: 'http://localhost:8080', 
@@ -26,16 +25,9 @@ export class WebSocketService {
 
   constructor(private socket: Socket, private http: HttpClient) { // Si l'utilisateur est connecté, récupérez l'ID utilisateur du localStorage
     this.socket = new Socket(config);
-    // this.initializeClientId();
+ 
   }
 
-  // private initializeClientId(): void {
-  //   // Si l'utilisateur est connecté, récupérez l'ID utilisateur du localStorage
-  //   const user = JSON.parse(localStorage.getItem('user')!);
-  //   if (user) {
-  //     this.clientId = user.uid;
-  //   }
-  // }
 
   connectWebSocket(clientId: string) {
     if (!this.clientId) {

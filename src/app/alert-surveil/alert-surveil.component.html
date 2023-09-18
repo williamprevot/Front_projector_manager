@@ -1,8 +1,10 @@
-<ul>
-    <li *ngFor="let alert of alerts">
-        <strong>Alert ID:</strong> {{alert.alert_id}} <br>
-        <strong>Projector ID:</strong> {{alert.projector_id}} <br>
-        <strong>Alert Message:</strong> {{alert.alert_message}} <br>
-        <strong>Timestamp:</strong> {{alert.timestamp | date}}
-    </li>
-</ul>
+<div *ngFor="let cinemaId of objectKeys(errorsByCinema)">
+    <div class="cinema-card">
+        <h2>{{ cinemaId }}</h2>
+        <div *ngFor="let error of errorsByCinema[cinemaId]" class="alert-card">
+            <strong>{{error._id}}</strong>  <br>
+            <strong>{{error.projector_id}}</strong>  <br>
+            <strong>{{error.error_message}}</strong>  <br>
+            <strong>{{error.timestamp | date:'dd/MM/yyyy, HH:mm'}}</strong> 
+        </div>
+    </div>

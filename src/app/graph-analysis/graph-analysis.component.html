@@ -1,0 +1,10 @@
+<select [(ngModel)]="selectedPeriod" (change)="onPeriodChange(selectedPeriod)">
+    <option value="daily">Journalier</option>
+    <option value="monthly">Mensuel</option>
+    <option value="yearly">Annuel</option>
+</select>
+
+
+<div *ngFor="let graph of graphs">
+    <img [src]="'data:image/png;base64,' + graph.image">
+</div>
