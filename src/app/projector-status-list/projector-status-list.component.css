@@ -1,3 +1,10 @@
+.display-container {
+  padding: 40px;
+  border-radius: 10px;
+  box-shadow: 0 3px 6px rgba(0,0,0,0.1);
+  margin: 50px auto;
+  max-width: 95%;
+}
 /* Style général pour la section contenant la grille de projecteurs */
 div {
   display: flex;
@@ -83,12 +90,26 @@ h3 {
 
 /* ************************************************* */
 /* Pour les écrans mobiles */
-@media (max-width: 768px) {
-  .grid-container {
-    grid-template-columns: repeat(auto-fill, minmax(50%, 1fr)); /* Une seule colonne, largeur minimale de 100% */
+@media (max-width: 960px) {
+  .projector-grid {
+    grid-template-columns: repeat(3, 1fr); /* 3 colonnes de taille égale */
+  }
+}
+@media (max-width: 700px) {
+  .projector-grid {
+    grid-template-columns: repeat(2, 1fr); /* 2 colonnes de taille égale */
+  }
+
+  
+}
+
+@media (max-width: 450px) {
+  .projector-grid {
+    grid-template-columns: repeat(auto-fill, minmax(100%, 1fr)); 
   }
 
   .projector-card {
-    /* Ajoutez des styles pour adapter les cartes aux écrans mobiles */
+    width: 100%;
+    height: auto;
   }
 }

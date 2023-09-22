@@ -108,10 +108,10 @@ export class ProjectorDetailComponent implements OnInit {
       this.reportService.addReport(this.cinemaId, this.projectorId, riport).subscribe(response => {
         this.reports.push(response);
         this.reportForm.reset({ reportType: 'maintenance' }); // Resetting the form
-        alert('Riport submitted successfully!');
+        alert('Report submitted successfully!');
       }, error => {
         console.error(error);
-        alert('Error submitting riport!');
+        alert('Error submitting report!');
       });
     } else {
       alert("No current user found. Cannot submit the report.");

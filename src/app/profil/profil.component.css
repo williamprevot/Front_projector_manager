@@ -1,8 +1,18 @@
+
+.container-fluid {
+    padding: 40px;
+    border-radius: 10px;
+    box-shadow: 0 3px 6px rgba(0,0,0,0.1);
+    margin: 50px auto;
+    max-width: 95%;
+}
+
 .profil{
     width: 100px;   
     height: auto;  /* Pour maintenir le ratio d'aspect de l'image */
     max-width: 100%; /* Pour s'assurer qu'elle ne dépasse pas la largeur de son conteneur */
 }
+
 
 .input-group {
     margin-top: 15px;

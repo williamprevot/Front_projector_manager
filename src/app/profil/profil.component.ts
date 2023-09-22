@@ -11,6 +11,7 @@ import { Router } from '@angular/router';
 export class ProfilComponent implements OnInit {
   user: User | null = null;
   newEmail: string = '';
+  showSidebar = false;
   constructor(public authService: AuthService,
     private toastr: ToastrService,
     private router: Router) { }
@@ -53,5 +54,9 @@ export class ProfilComponent implements OnInit {
   
   navigateToProjectors(cinemaId: string) {
     this.router.navigate(['cinemas', cinemaId, 'projectors']);
+  }
+  
+  toggleSidebar() {
+    this.showSidebar = !this.showSidebar;
   }
 }

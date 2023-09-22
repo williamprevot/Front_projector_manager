@@ -21,6 +21,7 @@ export class ReportService {
       'X-API-Key': this.apiKey
     });
     return this.http.get<any[]>(`${this.apiUrl}/cinemas/${cinemaId}/projectors/${projectorId}/details/reports`, { headers });
+    
   }
 
   getReportById(cinemaId: string, projectorId: string, id: string): Observable<Riport> {

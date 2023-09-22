@@ -15,10 +15,10 @@ const routes: Routes = [
   { path: 'index/signIn', component: LoginComponent },
   { path: 'index/signUp', component: RegisterComponent },
   {path:'forgot-password',component: ForgotPasswordComponent},
-  { path: 'cinemas/:cinemaId/projectors', component: ProjectorStatusListComponent },
-  { path: 'cinemas/:cinemaId/projectors/:projectorId', component: ProjectorDetailComponent },
+  { path: 'cinemas/:cinemaId/projectors',canActivate: [AuthGuard],component: ProjectorStatusListComponent },
+  { path: 'cinemas/:cinemaId/projectors/:projectorId',canActivate: [AuthGuard], component: ProjectorDetailComponent },
   { path: 'profil',canActivate: [AuthGuard],  component: ProfilComponent },
-  {path:'alerts', component: AlertSurveilComponent }
+  {path:'alerts',canActivate: [AuthGuard],component: AlertSurveilComponent }
 ];
 
 @NgModule({

@@ -1,44 +1,47 @@
-<!-- Toolbar avec l'icône d'alerte -->
-<div class="toolbar">
-  <button mat-icon-button [matBadge]="totalAlerts" matBadgeColor="warn" (click)="goToAlerts()">
-    <mat-icon>notifications</mat-icon>
-  </button>
-</div>
-<div>
-
-  <!-- Cinema Selector -->
-  <div class="cinema-selector">
-    <mat-form-field class="input-field">
-      <mat-label>Sélectionnez un cinéma</mat-label>
-      <mat-select [(value)]="selectedCinema" (selectionChange)="onCinemaSelect(selectedCinema)">
-        <mat-option *ngFor="let cinema of cinemas" [value]="cinema.cinema_id">
-          {{ cinema.cinema_id }}
-        </mat-option>
-      </mat-select>
-    </mat-form-field>
+<div class="display-container">
+  <!-- Toolbar avec l'icône d'alerte -->
+  <div class="toolbar">
+    <button mat-icon-button [matBadge]="totalAlerts" matBadgeColor="warn" (click)="goToAlerts()">
+      <mat-icon>notifications</mat-icon>
+    </button>
   </div>
+  <div>
 
-  <!-- Loading Animation -->
-  <div class="loading-animation" *ngIf="isLoading">
-    <mat-progress-spinner mode="indeterminate" diameter="50"></mat-progress-spinner>
-    <br>
-    <br>
-    <p>Chargement des projecteurs...</p>
-  </div>
+    <!-- Cinema Selector -->
+    <div class="cinema-selector">
+      <mat-form-field class="input-field">
+        <mat-label>Sélectionnez un cinéma</mat-label>
+        <mat-select [(value)]="selectedCinema" (selectionChange)="onCinemaSelect(selectedCinema)">
+          <mat-option *ngFor="let cinema of cinemas" [value]="cinema.cinema_id">
+            {{ cinema.cinema_id }}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+    </div>
 
-  <!-- Projectors Grid -->
-  <div class="grid-container" *ngIf="selectedCinema && !isLoading">
-    <h3>Projecteurs pour le {{ selectedCinema }} :</h3>
-    <div class="projector-grid">
-      <div *ngFor="let projector of projectors" class="projector-card" (click)="onProjectorClick(projector)">
-        <div class="projector-details">
-          <div class="projector-wrapper">
-            <ng-container [ngSwitch]="projectorStatus[projector.projector_id]">
-              <img [src]="getStatusImage(projectorStatus[projector.projector_id])"
-                [@statusChange]="projectorStatus[projector.projector_id]">
-              <p>Projecteur ID: {{ projector.projector_id }} - {{ statusSymbols[projectorStatus[projector.projector_id]]
-                }}</p>
-            </ng-container>
+    <!-- Loading Animation -->
+    <div class="loading-animation" *ngIf="isLoading">
+      <mat-progress-spinner mode="indeterminate" diameter="50"></mat-progress-spinner>
+      <br>
+      <br>
+      <p>Chargement des projecteurs...</p>
+    </div>
+
+    <!-- Projectors Grid -->
+    <div class="grid-container" *ngIf="selectedCinema && !isLoading">
+      <h3>Projecteurs pour le {{ selectedCinema }} :</h3>
+      <div class="projector-grid">
+        <div *ngFor="let projector of projectors" class="projector-card" (click)="onProjectorClick(projector)">
+          <div class="projector-details">
+            <div class="projector-wrapper">
+              <ng-container [ngSwitch]="projectorStatus[projector.projector_id]">
+                <img [src]="getStatusImage(projectorStatus[projector.projector_id])"
+                  [@statusChange]="projectorStatus[projector.projector_id]">
+                <p>Projecteur ID: {{ projector.projector_id }} - {{
+                  statusSymbols[projectorStatus[projector.projector_id]]
+                  }}</p>
+              </ng-container>
+            </div>
           </div>
         </div>
       </div>

@@ -2,10 +2,11 @@
 .cinema-card {
     border: 1px solid #e0e0e0;
     border-radius: 8px;
+    justify-content: center;
     padding: 16px;
-    margin: 16px 0;
+    margin: 16px auto;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    width: fit-content; /* Ajuste la largeur au contenu */
+    width: 85%; /* Ajuste la largeur au contenu */
   }
   
   .cinema-card h2 {
@@ -18,13 +19,13 @@
   
   /* Style pour la card de l'alerte */
   .alert-card {
-    border: 1px solid #fafafa; /* Coloration en orange pour le style d'alerte */
+    border: 1px solid #fafafa; 
     border-radius: 8px;
     color: white; /* Texte en blanc */
     padding: 10px;
-    margin: 8px 0;
-    width: fit-content; /* Ajuste la largeur au contenu */
-    margin-bottom: 10px; 
+    margin: auto;
+    width: 85%; /* Ajuste la largeur au contenu */
+    margin-bottom: 12px; 
     background-color: #f39e9e; 
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   }

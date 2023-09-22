@@ -1,0 +1,17 @@
+[debug] [2023-09-22T04:04:42.634Z] ----------------------------------------------------------------------
+[debug] [2023-09-22T04:04:42.637Z] Command:       C:\Program Files\nodejs\node.exe C:\Users\guy-william.prevot\AppData\Roaming\npm\node_modules\firebase-tools\lib\bin\firebase.js deploy
+[debug] [2023-09-22T04:04:42.638Z] CLI Version:   12.5.4
+[debug] [2023-09-22T04:04:42.638Z] Platform:      win32
+[debug] [2023-09-22T04:04:42.638Z] Node Version:  v18.17.0
+[debug] [2023-09-22T04:04:42.640Z] Time:          Fri Sep 22 2023 06:04:42 GMT+0200 (heure d’été d’Europe centrale)
+[debug] [2023-09-22T04:04:42.641Z] ----------------------------------------------------------------------
+[debug] 
+[debug] [2023-09-22T04:04:42.802Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform"]
+[debug] [2023-09-22T04:04:42.803Z] > authorizing via signed-in user (prevotgw@gmail.com)
+[debug] [2023-09-22T04:04:42.803Z] [iam] checking project projector-survey for permissions ["firebase.projects.get","firebasehosting.sites.update"]
+[debug] [2023-09-22T04:04:42.807Z] >>> [apiv2][query] POST https://cloudresourcemanager.googleapis.com/v1/projects/projector-survey:testIamPermissions [none]
+[debug] [2023-09-22T04:04:42.807Z] >>> [apiv2][(partial)header] POST https://cloudresourcemanager.googleapis.com/v1/projects/projector-survey:testIamPermissions x-goog-quota-user=projects/projector-survey
+[debug] [2023-09-22T04:04:42.808Z] >>> [apiv2][body] POST https://cloudresourcemanager.googleapis.com/v1/projects/projector-survey:testIamPermissions {"permissions":["firebase.projects.get","firebasehosting.sites.update"]}
+[debug] [2023-09-22T04:04:43.074Z] <<< [apiv2][status] POST https://cloudresourcemanager.googleapis.com/v1/projects/projector-survey:testIamPermissions 200
+[debug] [2023-09-22T04:04:43.074Z] <<< [apiv2][body] POST https://cloudresourcemanager.googleapis.com/v1/projects/projector-survey:testIamPermissions {"permissions":["firebase.projects.get","firebasehosting.sites.update"]}
+[debug] [2023-09-22T04:04:43.077Z] >>> [apiv2][query] GET https://firebase.googleapis.com/v1beta1/projects/projector-survey [none]

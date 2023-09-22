@@ -1,16 +1,16 @@
-<div fxLayout="row" fxLayout.lt-md="column" fxLayoutGap="20px" class="container">
-
+<div class="container">
+   
   <!-- Projector Details -->
-  <div *ngIf="!projectorDetails.projector_id" class="loading">
+  <div *ngIf="!projectorDetails.projector_id"  class="loading-animation">
       <mat-progress-spinner mode="indeterminate" diameter="50"></mat-progress-spinner>
       <p>Chargement des détails du projecteur...</p>
   </div>
 
-  <mat-card *ngIf="projectorDetails.projector_id && currentStatus" fxFlex="50" fxFlexOrder="1">
+  <mat-card *ngIf="projectorDetails.projector_id && currentStatus" fxFlex fxFlexOrder="1">
       <mat-card-header>
           <mat-card-title>Détails du Projecteur</mat-card-title>
       </mat-card-header>
-      <mat-card-content>
+      <mat-card-content class="projector-details">
           <p><strong>ID :</strong> {{ projectorDetails.projector_id }}</p>
           <p><strong>Cinema :</strong> {{ projectorDetails.cinema_id }}</p>
           <p><strong>Modèle :</strong> {{ projectorDetails.model }}</p>
@@ -19,7 +19,7 @@
   </mat-card>
 
   <!-- Reports history and form for new report -->
-  <mat-card fxFlex="50" fxFlexOrder="2">
+  <mat-card *ngIf="projectorDetails.projector_id && currentStatus" fxFlex fxFlexOrder="2">
       <mat-card-header>
           <mat-card-title>Maintenance et Pannes</mat-card-title>
       </mat-card-header>
@@ -36,8 +36,8 @@
           </mat-form-field>
 
           <!-- Button to show the form -->
-          <button mat-raised-button color="primary" (click)="toggleFormVisibility()">Editer un nouveau rapport</button>
-
+          <button class="btn btn-primary" (click)="toggleFormVisibility()">Edit New Rport</button>
+          
           <div *ngIf="showForm">
               <!-- Form for new report -->
               <form [formGroup]="reportForm" (ngSubmit)="onSubmit()">
@@ -61,9 +61,8 @@
                               Ce champ est obligatoire.
                           </mat-error>
                       </mat-form-field>
-
                       <!-- Disable button if form is invalid -->
-                      <button mat-raised-button color="primary" type="submit" [disabled]="reportForm.invalid">Envoyer</button>
+                      <button class="btn btn-primary"  type="submit" [disabled]="reportForm.invalid">Envoyer</button>
                   </div>
               </form>
           </div>
